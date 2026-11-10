@@ -1,0 +1,326 @@
+.section {
+  position: relative;
+  padding: 8rem 0 9.4286rem;
+  color: #fff0f5;
+  background: #171717;
+}
+
+.header,
+.carousel,
+.controls {
+  width: min(102.8571rem, calc(100% - 3.4286rem));
+  margin-inline: auto;
+}
+
+.header {
+  margin-bottom: 3.8571rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(22.1429rem, 0.75fr);
+  align-items: end;
+  gap: clamp(3.5714rem, 9vw, 10.7143rem);
+}
+
+.eyebrow {
+  margin-bottom: 1.3571rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+}
+
+.header h2 {
+  font-family: var(--font-titulo), var(--font);
+  font-size: clamp(2.7143rem, 4vw, 4rem);
+  font-weight: 600;
+  line-height: 0.96;
+  letter-spacing: -0.048em;
+}
+
+.header h2 span {
+  display: block;
+}
+
+.header > p {
+  max-width: 30rem;
+  justify-self: end;
+  font-size: 1.0714rem;
+  line-height: 1.62;
+  color: rgba(247, 244, 239, 0.5);
+}
+
+.carousel {
+  overflow: visible;
+}
+
+.carousel :global(.splide__track) {
+  overflow: visible;
+  padding-block: 0.5rem 0.7143rem;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.carousel :global(.splide__list) {
+  align-items: stretch;
+}
+
+.slide {
+  height: auto;
+  display: flex;
+}
+
+.card {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 23.5714rem;
+  overflow: hidden;
+  border: 0.0714rem solid var(--hairline);
+  border-radius: var(--radius-editorial);
+  color: inherit;
+  text-decoration: none;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 54%),
+    var(--surface);
+  transition:
+    border-color 0.4s ease,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cardImage {
+  object-fit: cover;
+  opacity: 0.22;
+  filter: grayscale(0.55) saturate(0.65);
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+.cardShade {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(18, 18, 18, 0.3), rgba(18, 18, 18, 0.94) 76%);
+}
+
+.card:hover .cardImage {
+  opacity: 0.32;
+  transform: scale(1.04);
+}
+
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.045);
+  border-radius: 50%;
+}
+
+.card::before {
+  width: 19.2857rem;
+  height: 19.2857rem;
+  top: -10.7143rem;
+  right: -7.1429rem;
+}
+
+.card::after {
+  width: 12.8571rem;
+  height: 12.8571rem;
+  top: -7.5rem;
+  right: -3.9286rem;
+}
+
+.card:hover {
+  border-color: rgba(194, 135, 90, 0.42);
+  transform: translateY(-0.4286rem);
+}
+
+.cardTop {
+  position: relative;
+  z-index: 1;
+  padding: 1.6429rem 1.7857rem 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.0714rem;
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.28);
+}
+
+.mark {
+  position: absolute;
+  z-index: 1;
+  top: 5.7857rem;
+  left: 1.7857rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.mark span {
+  font-family: var(--font-titulo), var(--font);
+  font-size: 2.5714rem;
+  font-weight: 550;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  color: var(--cor-destaque);
+}
+
+.mark i {
+  width: 3.7143rem;
+  height: 0.0714rem;
+  background: rgba(194, 135, 90, 0.36);
+}
+
+.cardContent {
+  position: absolute;
+  z-index: 1;
+  left: 1.7857rem;
+  right: 1.7857rem;
+  bottom: 1.7857rem;
+}
+
+.cardContent h3 {
+  font-family: var(--font-titulo), var(--font);
+  font-size: 2.2143rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.cardContent p {
+  margin-top: 0.8571rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: rgba(247, 244, 239, 0.48);
+}
+
+.cardContent > span {
+  display: block;
+  margin-top: 1.5714rem;
+  padding-top: 1.2143rem;
+  border-top: 0.0714rem solid rgba(255, 255, 255, 0.09);
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.34);
+}
+
+.controls {
+  margin-top: 1.7857rem;
+}
+
+.viewAll {
+  width: min(102.8571rem, calc(100% - 3.4286rem));
+  min-height: 4.5rem;
+  margin: 2.5rem auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0 1.5rem;
+  border-top: 0.0714rem solid var(--hairline);
+  border-bottom: 0.0714rem solid var(--hairline);
+  color: #f7f4ef;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 0.25s ease, padding 0.3s ease;
+}
+
+.viewAll:hover {
+  padding-inline: 2rem;
+  color: var(--cor-destaque);
+}
+
+@media (max-width: 50rem) {
+  .section {
+    padding: 5.8571rem 0 6.5714rem;
+  }
+
+  .header,
+  .carousel,
+  .controls {
+    width: calc(100% - 2.5714rem);
+  }
+
+  .viewAll { width: calc(100% - 2.5714rem); }
+
+  .header {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2.7143rem;
+  }
+
+  .header h2 {
+    font-size: 2.4286rem;
+  }
+
+  .header > p {
+    justify-self: start;
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+
+  .card:hover {
+    transform: none;
+  }
+}
+
+.eyebrow,
+.mark span {
+  color: var(--accent);
+}
+
+.card {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.022), transparent 54%),
+    var(--surface);
+}
+
+.card:hover {
+  border-color: var(--hairline-strong);
+}
+
+.progress span {
+  background: var(--accent);
+}
+
+/* índice numérico do card removido; mantém apenas "Mercado carioca" */
+.cardTop span:first-child {
+  display: none;
+}
+
+@media (max-width: 44.2857rem) {
+  .section {
+    padding: 4.2857rem 0 4.8571rem;
+  }
+
+  .header,
+  .carousel,
+  .controls,
+  .viewAll {
+    width: calc(100% - 2.2857rem);
+  }
+
+  .header {
+    gap: 1.4286rem;
+    margin-bottom: 2.1429rem;
+  }
+
+  .viewAll {
+    min-height: 4rem;
+    margin-top: 2rem;
+    gap: 1rem;
+    padding-inline: 1.1429rem;
+  }
+}

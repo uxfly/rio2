@@ -1,0 +1,327 @@
+.section {
+  padding: 8.2857rem 0;
+  color: #fff0f3;
+  background: #171717;
+}
+
+.shell {
+  position: relative;
+  width: min(102.8571rem, calc(100% - 3.4286rem));
+  min-height: 39.2857rem;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(30rem, 0.92fr);
+  overflow: hidden;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-padrao);
+  background:
+    radial-gradient(
+      ellipse 58% 72% at 100% 0%,
+      rgba(217, 120, 131, 0.1),
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 52% 68% at 5% 100%,
+      rgba(194, 135, 90, 0.055),
+      transparent 72%
+    ),
+    linear-gradient(125deg, #22201f 0%, #1d1b1a 54%, #1a1919 100%);
+  box-shadow:
+    0 3.5714rem 8.5714rem rgba(0, 0, 0, 0.34),
+    inset 0 0.0714rem rgba(255, 255, 255, 0.035);
+}
+
+.copy,
+.form {
+  position: relative;
+  z-index: 1;
+}
+
+.copy {
+  min-width: 0;
+  padding: clamp(3rem, 6vw, 6.4286rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.copy > p {
+  font-size: var(--font-pill);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+}
+
+.copy h2 {
+  max-width: 51.4286rem;
+  margin-top: 3.5714rem;
+  font-family: var(--font-titulo), var(--font);
+  font-size: clamp(3rem, 5vw, 5rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.058em;
+  color: #f7f4ef;
+}
+
+.copy h2 span {
+  display: block;
+}
+
+.signals {
+  margin-top: 4.2857rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5714rem;
+}
+
+.signals span {
+  min-height: 2.2857rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 0.8571rem;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-pill);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.62);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.form {
+  margin: 2.1429rem;
+  padding: clamp(2.1429rem, 4vw, 4.2857rem);
+  display: flex;
+  flex-direction: column;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.11);
+  border-radius: var(--radius-padrao);
+  color: #f7f4ef;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      transparent 42%
+    ),
+    rgba(15, 15, 15, 0.96);
+  box-shadow:
+    0 2.8571rem 7.1429rem rgba(0, 0, 0, 0.48),
+    0 0 5.7143rem rgba(217, 120, 131, 0.045),
+    inset 0 0.0714rem rgba(255, 255, 255, 0.035);
+}
+
+.formHeading > span {
+  font-size: var(--font-small);
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+}
+
+.formHeading p {
+  max-width: 34.2857rem;
+  margin-top: 0.7143rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: rgba(247, 244, 239, 0.46);
+}
+
+.amountField {
+  margin-top: 2.8571rem;
+  display: grid;
+  gap: 0.8571rem;
+  padding-bottom: 1.4286rem;
+  border-bottom: 0.0714rem solid rgba(255, 255, 255, 0.16);
+}
+
+.amountField > span {
+  font-size: var(--font-small);
+  font-weight: 650;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.36);
+}
+
+.amountField input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  font-family: var(--font-titulo), var(--font);
+  font-size: clamp(2.5714rem, 4vw, 4.2857rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.055em;
+  color: #f7f4ef;
+  background: transparent;
+}
+
+.objectives {
+  margin-top: 1.7143rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5714rem;
+}
+
+.objectives button {
+  min-height: 3.4286rem;
+  padding: 0 1rem;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-button);
+  font-weight: 600;
+  color: rgba(247, 244, 239, 0.5);
+  background: transparent;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.objectives button:hover,
+.objectives button.selected {
+  color: #171717;
+  border-color: var(--cor-destaque);
+  background: var(--cor-destaque);
+}
+
+.cta {
+  min-height: 4.1429rem;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4286rem;
+  padding: 0 1.4286rem;
+  border: 0;
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-button);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #171717;
+  background: var(--cor-destaque);
+  transition: background-color 0.25s ease;
+}
+
+.cta:hover {
+  background: #f7f4ef;
+}
+
+.cta svg {
+  width: 1.2857rem;
+  height: 1.2857rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.objectives button:focus-visible,
+.amountField:focus-within,
+.cta:focus-visible {
+  outline: 0.1429rem solid #f7f4ef;
+  outline-offset: 0.2857rem;
+}
+
+@media (max-width: 68rem) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .form {
+    min-height: 35.7143rem;
+  }
+}
+
+@media (max-width: 50rem) {
+  .section {
+    padding: 5.8571rem 0;
+  }
+
+  .shell {
+    width: calc(100% - 2.5714rem);
+  }
+
+  .copy {
+    padding: 3rem 1.7143rem;
+  }
+
+  .copy h2 {
+    font-size: 3rem;
+  }
+
+  .form {
+    min-height: 37.1429rem;
+    margin: 0 0.8571rem 0.8571rem;
+    padding: 2.1429rem 1.4286rem;
+  }
+}
+
+@media (max-width: 31rem) {
+  .objectives {
+    grid-template-columns: 1fr;
+  }
+}
+
+.shell {
+  border-color: rgba(255, 202, 210, 0.12);
+  background:
+    radial-gradient(
+      ellipse 58% 72% at 100% 0%,
+      rgba(243, 143, 167, 0.2),
+      transparent 68%
+    ),
+    radial-gradient(
+      ellipse 52% 68% at 5% 100%,
+      rgba(255, 151, 105, 0.11),
+      transparent 72%
+    ),
+    linear-gradient(125deg, #2b1824 0%, #211823 54%, #191722 100%);
+}
+
+.copy > p,
+.formHeading > span {
+  color: #f38fa7;
+}
+
+.form {
+  background:
+    linear-gradient(145deg, rgba(255, 224, 229, 0.025), transparent 42%),
+    rgba(20, 16, 21, 0.96);
+}
+
+.objectives button:hover,
+.objectives button.selected,
+.cta {
+  color: #181419;
+  border-color: #f38fa7;
+  background: #f38fa7;
+}
+
+.cta:hover {
+  background: #fff0f3;
+}
+
+@media (max-width: 44.2857rem) {
+  .section {
+    padding: 4.2857rem 0;
+  }
+
+  .shell {
+    width: calc(100% - 2.2857rem);
+  }
+
+  .copy {
+    padding: 2.4286rem 1.1429rem;
+  }
+
+  .copy h2 {
+    font-size: 2.5714rem;
+  }
+
+  .form {
+    min-height: auto;
+    margin: 0 0.5714rem 0.5714rem;
+    padding: 1.7143rem 1.1429rem;
+  }
+}

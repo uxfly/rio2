@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cover</title>
+  <style>
+    /* Nunito do Google, variável: um arquivo cobre 400–700 */
+    @font-face {
+      font-family: 'Nunito';
+      src: url('fonts/Nunito.woff2') format('woff2');
+      font-weight: 400 700;
+      font-display: swap;
+    }
+
+    :root {
+      --font: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* base do projeto: 12px. em % e não em px para não anular o tamanho
+       de fonte que o usuário tenha configurado no navegador — 1rem
+       continua valendo 12px no padrão, mas acompanha se ele aumentar */
+    html {
+      font-size: 75%;
+      background: #222;
+    }
+
+    body {
+      font-family: var(--font);
+      font-size: 1rem;
+      color: #fff;
+      background: #222;
+    }
+
+    /* cursor próprio — só onde há mouse de verdade */
+    @media (hover: hover) and (pointer: fine) {
+      /* .results .result e não só .result: a regra cursor:pointer vem
+         depois no arquivo e empataria na especificidade, vencendo */
+      body, .search, .results .result, .menu a { cursor: none; }
+
+      .cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity .25s;
+        will-change: transform;
+      }
+
+      .cursor.ativo { opacity: 1; }
+
+      .cursor-anel {
+        width: 44px;
+        height: 44px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        transition: width .2s ease, height .2s ease, border-radius .2s ease,
+                    border-color .2s ease, background-color .2s ease, opacity .25s;
+      }
+
+      .cursor-ponto {
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        transition: width .2s ease, height .2s ease,
+                    border-radius .2s ease, opacity .18s;
+      }
+
+      /* perto de link ou resultado: o anel encolhe */
+      .cursor-anel.perto {
+        width: 24px;
+        height: 24px;
+        border-color: #fff;
+      }
+
+      /* no estado de texto o contorno também recua um pouco, para a
+         mudança de forma vir acompanhada de mudança de tamanho */
+      .cursor-anel.texto {
+        width: 32px;
+        height: 32px;
+      }
+
+      /* sobre campo de texto quem vira I-beam é o ponto de dentro;
+         o contorno segue círculo, e o I-beam cabe dentro dele */
+      .cursor-ponto.texto {
+        width: 2px;
+        height: 11px;
+        border-radius: 1px;
+      }
+
+      /* as serifas de cima e de baixo do I-beam */
+      .cursor-ponto::before,
+      .cursor-ponto::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        width: 5px;
+        height: 1.5px;
+        background: #fff;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity .18s;
+      }
+
+      .cursor-ponto::before { top: 0; }
+      .cursor-ponto::after  { bottom: 0; }
+
+      .cursor-ponto.texto::before,
+      .cursor-ponto.texto::after { opacity: 1; }
+    }
+
+    /* Lenis */
+    html.lenis, html.lenis body { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto !important; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    /* o cover: 500px. a câmera amplia a foto além das bordas, então clipa
+       aqui — senão o excedente gera rolagem horizontal na página */
+    .cover {
+      position: relative;
+      overflow: hidden;
+      height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+
+      background: #222;
+      /* prende a mesclagem do canvas a este contexto */
+      isolation: isolate;
+      /* com a luz presa ao topo ela não chega ao rodapé, então não há
+         o que vazar — e deixa de valer a pena renderizar essa sobra */
+      --vazamento: 0px;
+    }
+
+    /* a foto numa camada própria, por baixo do canvas.
+       opacidade baixa p/ ela ficar discreta e o efeito dominar,
+       e máscara que a mata em degradê até sumir embaixo */
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url('img/cover.jpg') center top / cover no-repeat;
+      opacity: .22;
+      pointer-events: none;
+      mask-image: linear-gradient(to bottom, #000 0 38%, transparent 88%);
+      -webkit-mask-image: linear-gradient(to bottom, #000 0 38%, transparent 88%);
+
+      /* câmera lenta: desliza de ponta a ponta e dá um zoom leve, ida e
+         volta. o zoom base (1.08) dá margem p/ o pan não revelar bordas */
+      transform: scale(1.08);
+      will-change: transform;
+      animation: camera 42s ease-in-out infinite alternate;
+    }
+
+    @keyframes camera {
+      0%   { transform: scale(1.08) translate(-1.6%,  0.4%); }
+      50%  { transform: scale(1.13) translate( 0.6%, -0.8%); }
+      100% { transform: scale(1.08) translate( 1.6%,  0.4%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cover::before { animation: none; transform: scale(1.04); }
+    }
+
+    #fx {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: calc(100% + var(--vazamento));
+      display: block;
+      z-index: 0;
+      pointer-events: none;
+      /* screen: o preto do canvas some e só a luz soma sobre a foto */
+      mix-blend-mode: screen;
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: min(500px, 100%);
+      margin: 0 auto;
+    }
+
+    /* menu no topo: é ele que carrega o peso visual da página,
+       acima do campo de busca */
+    .menu {
+      position: absolute;
+      top: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      padding: 0.5rem;
+      border-radius: 999px;
+      max-width: calc(100% - 32px);
+      /* sem sombra: o peso vem do fundo e da borda mais fortes */
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      border: 1px solid rgba(255, 255, 255, 0.34);
+    }
+
+    .menu a {
+      padding: 0.85rem 1.6rem;
+      border-radius: 999px;
+      font-size: 1rem;              /* 1rem = 12px (raiz em 75%) */
+      font-weight: 500;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: color .2s, background-color .2s;
+    }
+
+    .menu a:hover { color: #fff; }
+
+    .menu a.ativo {
+      background: rgba(255, 255, 255, 0.32);
+      color: #333;
+    }
+
+    /* --- vidro ---------------------------------------------------------- */
+    /* mais discreto que o menu, de propósito: o campo é o segundo
+       elemento na hierarquia */
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        0 8px 32px rgba(0, 0, 0, 0.22);
+    }
+
+    .search {
+      width: 100%;
+      height: 50px;
+      padding: 0 2rem;
+      border-radius: 999px;
+      font-family: var(--font);
+      font-size: 1rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #fff;
+      outline: none;
+      transition: border-color .25s, background .25s;
+    }
+
+    /* o placeholder nativo continua lá pela acessibilidade, mas quem
+       aparece é o .dica — nele dá para varrer o brilho pelas letras */
+    .search::placeholder { color: transparent; }
+
+    .dica {
+      position: absolute;
+      /* left e font-size têm de bater com o padding e o corpo do .search */
+      left: 2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      font-size: 1rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      transition: opacity .2s;
+
+      /* repouso translúcido no tom de placeholder de tema escuro;
+         a faixa clara corre por dentro do próprio texto */
+      background: linear-gradient(
+        100deg,
+        rgba(255, 255, 255, 0.38) 0 42%,
+        rgba(255, 255, 255, 0.92) 50%,
+        rgba(255, 255, 255, 0.38) 58% 100%
+      );
+      background-size: 250% 100%;
+      background-position: 150% 0;
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      /* varre rápido e descansa: o brilho ocupa só o fim do ciclo */
+      animation: brilho 7s ease-in-out infinite;
+    }
+
+    @keyframes brilho {
+      0%, 86%  { background-position: 150% 0; }
+      100%     { background-position: -60% 0; }
+    }
+
+    /* um traço percorre a borda: nasce lento, acelera e some */
+    .contorno {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .contorno rect {
+      fill: none;
+      stroke-linecap: round;
+      opacity: 0;
+    }
+
+    /* a faísca: um ponto curto e quente, com brilho ao redor */
+    .contorno .faisca {
+      stroke: #fff;
+      stroke-width: 2.5;
+      stroke-dasharray: 1.2 98.8;   /* pathLength=100: ~1% do perímetro */
+      stroke-dashoffset: 100;
+      filter:
+        drop-shadow(0 0 4px rgba(255, 214, 170, 0.95))
+        drop-shadow(0 0 10px rgba(255, 150, 70, 0.75));
+      animation: faisca 7s linear infinite;
+    }
+
+    /* o rastro vai 12% atrás dela, mais fino e apagado */
+    .contorno .rastro {
+      stroke: rgba(255, 180, 120, 0.55);
+      stroke-width: 1.2;
+      stroke-dasharray: 12 88;
+      stroke-dashoffset: 112;
+      animation: rastro 7s linear infinite;
+    }
+
+    /* parada a maior parte do ciclo; a curva faz nascer lento e acelerar */
+    @keyframes faisca {
+      0%, 86% {
+        stroke-dashoffset: 100;
+        opacity: 0;
+        animation-timing-function: cubic-bezier(.65, 0, .85, .35);
+      }
+      89%  { opacity: 1; }
+      100% { stroke-dashoffset: 0; opacity: 0; }
+    }
+
+    @keyframes rastro {
+      0%, 86% {
+        stroke-dashoffset: 112;
+        opacity: 0;
+        animation-timing-function: cubic-bezier(.65, 0, .85, .35);
+      }
+      89%  { opacity: .8; }
+      100% { stroke-dashoffset: 12; opacity: 0; }
+    }
+
+    /* somem assim que o usuário digita */
+    .tem-texto .dica,
+    .tem-texto .contorno { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .contorno rect { animation: none; opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dica { animation: none; }
+    }
+
+    .search:focus {
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    /* preso ao input, mas sem contêiner: só a lista */
+    .results {
+      position: absolute;
+      top: calc(100% + 0.85rem);
+      left: 0;
+      right: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .result {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.3rem;
+      padding: 0.5rem 2rem;
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.86);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(6px);
+      animation: rise .4s cubic-bezier(.2, .7, .3, 1) forwards;
+      transition: color .18s;
+    }
+
+    .result:hover { color: #fff; }
+
+    .result .meta {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.45);
+      white-space: nowrap;
+    }
+
+    .result:hover .meta { color: rgba(255, 255, 255, 0.7); }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .empty {
+      margin-top: 1.2rem;
+      padding: 0 2rem;
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.45);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .result { animation-duration: .01ms; }
+    }
+  </style>
+</head>
+<body>
+  <div class="cover">
+    <canvas id="fx"></canvas>
+
+    <nav class="menu" aria-label="Principal">
+      <a href="#" class="ativo" aria-current="page">Início</a>
+      <a href="#">Lançamentos</a>
+      <a href="#">Bairros</a>
+      <a href="#">Blog</a>
+      <a href="#">Contato</a>
+    </nav>
+    <div class="wrap">
+      <input class="search glass" id="q" type="text" placeholder="Inicie aqui" autocomplete="off">
+      <span class="dica" aria-hidden="true">Inicie aqui</span>
+      <svg class="contorno" aria-hidden="true">
+        <rect class="rastro" x="0" y="0" width="100%" height="100%" rx="25" ry="25" pathLength="100"/>
+        <rect class="faisca" x="0" y="0" width="100%" height="100%" rx="25" ry="25" pathLength="100"/>
+      </svg>
+      <ul class="results" id="results"></ul>
+    </div>
+  </div>
+
+  <script src="lenis.min.js"></script>
+  <script>
+  /* ---------------- resultados fake ------------------------------------ */
+  const DADOS = [
+    { nome: 'Pão de Açúcar',        meta: 'Urca' },
+    { nome: 'Cristo Redentor',      meta: 'Corcovado' },
+    { nome: 'Praia de Copacabana',  meta: 'Copacabana' },
+    { nome: 'Praia do Arpoador',    meta: 'Ipanema' },
+    { nome: 'Parque Lage',          meta: 'Jardim Botânico' },
+    { nome: 'Escadaria Selarón',    meta: 'Lapa' },
+    { nome: 'Mirante Dona Marta',   meta: 'Santa Teresa' },
+    { nome: 'Jardim Botânico',      meta: 'Zona Sul' },
+    { nome: 'Feira de São Cristóvão', meta: 'São Cristóvão' },
+    { nome: 'Ilha de Paquetá',      meta: 'Baía de Guanabara' }
+  ];
+
+  const q = document.getElementById('q');
+  const results = document.getElementById('results');
+
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+  function render() {
+    const busca = q.value.trim();
+    const termo = norm(busca);
+
+    results.innerHTML = '';
+    if (!termo) return;   // nada aparece antes de digitar
+
+    const lista = DADOS
+      .filter(d => norm(d.nome + ' ' + d.meta).includes(termo))
+      .slice(0, 7);   // no máximo 7, sem rolagem
+
+    if (!lista.length) {
+      const vazio = document.createElement('div');
+      vazio.className = 'empty';
+      vazio.textContent = 'Nenhum resultado para "' + q.value.trim() + '"';
+      results.appendChild(vazio);
+      return;
+    }
+
+    lista.forEach((d, i) => {
+      const el = document.createElement('li');
+      el.className = 'result';
+      el.style.animationDelay = Math.min(i * 35, 300) + 'ms';
+      el.innerHTML = '<span></span><span class="meta"></span>';
+      el.firstChild.textContent = d.nome;
+      el.lastChild.textContent = d.meta;
+      results.appendChild(el);
+    });
+  }
+
+  const wrap = q.closest('.wrap');
+
+  q.addEventListener('input', () => {
+    wrap.classList.toggle('tem-texto', q.value.length > 0);
+    render();
+  });
+  render();
+
+  /* ---------------- scroll suave (Lenis) ------------------------------- */
+  const lenis = new Lenis({
+    lerp: 0.085,          // inércia — quanto menor, mais "pesado"
+    wheelMultiplier: 0.9,
+    smoothWheel: true
+  });
+
+  /* ---------------- cursor ---------------------------------------------
+     duas bolinhas: o ponto acompanha o mouse na hora, o anel vai atrás
+     com atraso — é essa defasagem que dá o ar magnético */
+  (function () {
+    if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    const anel  = document.createElement('div');
+    const ponto = document.createElement('div');
+    anel.className  = 'cursor cursor-anel';
+    ponto.className = 'cursor cursor-ponto';
+    document.body.append(anel, ponto);
+
+    const CAMPO     = 'input, textarea, [contenteditable="true"]';
+    const CLICAVEL  = 'a, button, .result, [role="button"]';
+
+    let visivel = false;
+
+    function posiciona(el, x, y) {
+      el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+    }
+
+    // os dois no mesmo ponto, no próprio evento: sem loop, sem atraso
+    addEventListener('mousemove', e => {
+      posiciona(ponto, e.clientX, e.clientY);
+      posiciona(anel,  e.clientX, e.clientY);
+      if (!visivel) {
+        visivel = true;
+        anel.classList.add('ativo');
+        ponto.classList.add('ativo');
+      }
+    }, { passive: true });
+
+    // some ao sair da janela
+    addEventListener('mouseout', e => {
+      if (e.relatedTarget === null) {
+        visivel = false;
+        anel.classList.remove('ativo');
+        ponto.classList.remove('ativo');
+      }
+    });
+
+    // delegação: os resultados nascem depois, então nada de listener neles
+    addEventListener('mouseover', e => {
+      const campo = !!e.target.closest(CAMPO);
+      // o ponto interno vira I-beam e o contorno encolhe junto
+      ponto.classList.toggle('texto', campo);
+      anel.classList.toggle('texto', campo);
+      // campo tem prioridade: nunca os dois estados ao mesmo tempo
+      anel.classList.toggle('perto', !campo && !!e.target.closest(CLICAVEL));
+    }, { passive: true });
+
+  })();
+
+  /* ---------------- campo de luz (WebGL) ------------------------------- */
+  (function () {
+    const canvas = document.getElementById('fx');
+    const cover  = document.querySelector('.cover');
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: false });
+    if (!gl) return;
+
+    const VERT = `
+      attribute vec2 a_pos;
+      void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
+    `;
+
+    const FRAG = `
+      precision highp float;
+
+      uniform vec2  u_res;
+      uniform float u_phase;   // tempo acumulado da dança (acelera ao digitar)
+      uniform vec4  u_box;     // centro.xy, meia-largura, meia-altura (px, y de baixo p/ cima)
+      uniform float u_radius;
+      uniform float u_type;    // 0..1, energia de digitação (decai sozinha)
+      uniform vec2  u_caret;   // posição do cursor de texto, em px
+      uniform float u_pulse;   // segundos desde a última tecla
+
+      uniform float u_spill;   // quanto o canvas passa do rodapé do cover, em px
+
+      // sorteados a cada abertura
+      uniform float u_seed;
+      uniform vec3  u_shape;   // altura da base, largura das laterais, centro x
+      uniform vec3  u_c1;
+      uniform vec3  u_c2;
+      uniform vec3  u_c3;
+      uniform vec3  u_c4;
+
+      float hash(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
+      }
+
+      // 3 oitavas: as duas últimas só somavam detalhe fino, que o borrão
+      // do campo e a mistura das cores engoliam de qualquer jeito
+      float fbm(vec2 p) {
+        float v = 0.0;
+        float a = 0.5;
+        for (int i = 0; i < 3; i++) {
+          v += a * noise(p);
+          p *= 2.02;
+          a *= 0.5;
+        }
+        return v;
+      }
+
+      // distância até o painel (negativa dentro dele)
+      float sdRoundBox(vec2 p, vec2 b, float r) {
+        vec2 q = abs(p) - b + r;
+        return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+      }
+
+      void main() {
+        vec2 frag = gl_FragCoord.xy;
+        vec2 uv = frag / u_res;
+
+        // o painel é um ímã: atrai o campo que vem de baixo.
+        // não existe halo próprio dele — é o mesmo campo, adensado aqui.
+        float d = sdRoundBox(frag - u_box.xy, u_box.zw, u_radius);
+        float pull = exp(-max(d, 0.0) / 190.0);
+
+        // --- reação à digitação -------------------------------------------
+        vec2  toCaret = frag - u_caret;
+        float dc = length(toCaret) / u_res.y;
+
+        // 1. brilho que acompanha o cursor enquanto se digita
+        float caretGlow = exp(-dc * 7.0) * u_type;
+
+        // 2. onda circular disparada a cada tecla. o 0.26 é o quanto o raio
+        // cresce: menor = onda menor. some um pouco mais rápido também
+        float r = u_pulse * 0.26;
+        float ring = exp(-abs(dc - r) * 26.0) * exp(-u_pulse * 3.0);
+
+        // as coordenadas do ruído são puxadas na direção do painel,
+        // e empurradas pra fora pela onda de cada tecla
+        vec2 toBox = (u_box.xy - frag) / u_res.y;
+        vec2 p = uv * vec2(1.6, 1.0)
+               + toBox * pull * 0.30
+               + normalize(toCaret + 0.0001) * ring * 0.06;
+
+        // quatro campos lentos e independentes: cada um puxa uma cor do sunrise.
+        // é a mistura entre eles que "dança" — sem silhueta, sem chama.
+        float s = u_phase;
+
+        // u_seed desloca todos os campos: cada abertura cai numa região
+        // diferente do ruído, então o desenho das manchas nunca se repete
+        float k = u_seed;
+        float w1 = fbm(p * 1.10 + vec2( s * 0.70, -s * 0.50) + k);
+        float w2 = fbm(p * 1.00 + vec2(-s * 0.60,  s * 0.40) +  3.7 + k * 1.7);
+        float w3 = fbm(p * 1.30 + vec2( s * 0.35,  s * 0.60) +  8.1 + k * 2.3);
+        float w4 = fbm(p * 0.90 + vec2(-s * 0.45, -s * 0.30) + 13.3 + k * 3.1);
+
+        // potência alta = a cor mais forte domina a região (soft-argmax).
+        // sem isso os pesos se equilibram e a mistura vira bege lavado.
+        w1 = pow(w1, 6.0); w2 = pow(w2, 6.0);
+        w3 = pow(w3, 6.0); w4 = pow(w4, 6.0);
+
+        float sw = w1 + w2 + w3 + w4 + 0.0001;
+        vec3 col = (u_c1 * w1 + u_c2 * w2 + u_c3 * w3 + u_c4 * w4) / sw;
+
+        // a média puxa p/ o cinza; devolve saturação antes de escalar.
+        // fator maior = cores mais vibrantes
+        float lum = dot(col, vec3(0.299, 0.587, 0.114));
+        col = clamp(mix(vec3(lum), col, 1.95), 0.0, 1.0);
+
+        // um campo só: sobe do rodapé, concentrado no centro...
+        // um campo só, agora preso ao TOPO: nasce em cima e desce.
+        // yc = 0 no rodapé do cover, 1 no topo
+        float alturaCover = u_res.y - u_spill;
+        float yc = (frag.y - u_spill) / alturaCover;
+
+        float doTopo = 1.0 - yc;                          // distância do topo
+
+        // uma faixa só, colada ao topo: brilha no topo e morre por volta de
+        // 30% da altura. sem costura — o topo é o máximo e cai suave p/ baixo,
+        // atravessando toda a largura (pega as laterais no próprio topo)
+        float dx = abs(uv.x - 0.5) * 2.0;                 // 0 no miolo, 1 nas bordas
+
+        // o efeito nasce no miolo, espalha até as laterais e recolhe, em loop
+        // infinito e irregular: duas ondas incomensuráveis abrem e fecham a
+        // largura acesa (spread pequeno = só o centro; grande = beira a beira)
+        float spread = 0.62 + 0.55 * sin(u_phase * 0.70)
+                            + 0.25 * sin(u_phase * 0.31 + 1.3 + u_shape.z);
+        spread = clamp(spread, 0.12, 1.30);
+        float larg = smoothstep(spread, spread - 0.40, dx);
+
+        // faixa colada ao topo (~30%), com o miolo descendo mais fundo
+        float meio = smoothstep(0.0, 1.0, 1.0 - dx);
+        float prof = u_shape.x * (1.0 + 0.9 * meio);
+        float amb = smoothstep(prof, 0.0, doTopo) * larg;
+
+        amb *= 0.55 + 0.45 * w1;                          // respira com o ruído
+        amb *= 1.0 + 0.5 * meio;                          // miolo mais encorpado
+
+        // vida: o brilho global sobe e desce e às vezes some por completo e
+        // volta. frequências incomensuráveis = os apagões vêm irregulares
+        float life = 0.6 + 0.5 * sin(u_phase * 0.55)
+                         + 0.35 * sin(u_phase * 0.24 + 1.7);
+        amb *= smoothstep(0.15, 1.0, life);
+
+        // o glow do input entra só ao digitar, somado por fora — não fica
+        // preso ao topo nem impede o apagão do campo ambiente
+        float e = amb + (1.3 * caretGlow + 0.9 * ring) * (0.55 + 0.45 * w1);
+
+        col *= e * 1.15;   // compensa o escurecimento do transito + envelope
+
+        // só a luz, sem base: preto onde não há nada. com mix-blend-mode:
+        // screen no canvas, o preto some e a luz soma sobre a foto
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    function compile(type, src) {
+      const s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(s));
+        return null;
+      }
+      return s;
+    }
+
+    const vs = compile(gl.VERTEX_SHADER, VERT);
+    const fs = compile(gl.FRAGMENT_SHADER, FRAG);
+    if (!vs || !fs) return;
+
+    const prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(prog));
+      return;
+    }
+    gl.useProgram(prog);
+
+    const bufr = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, bufr);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+      -1, -1,  1, -1, -1, 1,
+      -1,  1,  1, -1,  1, 1
+    ]), gl.STATIC_DRAW);
+    const aPos = gl.getAttribLocation(prog, 'a_pos');
+    gl.enableVertexAttribArray(aPos);
+    gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes    = gl.getUniformLocation(prog, 'u_res');
+    const uPhase  = gl.getUniformLocation(prog, 'u_phase');
+    const uBox    = gl.getUniformLocation(prog, 'u_box');
+    const uRadius = gl.getUniformLocation(prog, 'u_radius');
+    const uType   = gl.getUniformLocation(prog, 'u_type');
+    const uCaret  = gl.getUniformLocation(prog, 'u_caret');
+    const uPulse  = gl.getUniformLocation(prog, 'u_pulse');
+
+    /* ---- sorteio desta abertura ---------------------------------------
+       matizes ficam presos à faixa do nascer do sol (rosa -> vermelho ->
+       laranja -> âmbar -> dourado), então varia sem sair da paleta */
+    const R = (a, b) => a + Math.random() * (b - a);
+
+    function hsl(h, s, l) {
+      h = ((h % 360) + 360) % 360 / 360;
+      const f = n => {
+        const k = (n + h * 12) % 12;
+        return l - s * Math.min(l, 1 - l) * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+      };
+      return [f(0), f(8), f(4)];
+    }
+
+    // quatro matizes crescentes dentro da faixa, com folga aleatória.
+    // faixa puxada p/ o vermelho: 6°–28° = do vermelho-alaranjado ao laranja,
+    // sem chegar ao amarelo. teto em 28° corta antes do dourado/amarelo.
+    const h0 = R(6, 12);                    // vermelho-alaranjado
+    const faixa = R(10, 16);               // curta: fica no vermelho/laranja
+    const hues = [0, 1, 2, 3].map(i =>
+      Math.max(6, Math.min(28, h0 + faixa * (i / 3) + R(-2, 2)))
+    );
+
+    // claridade alta mesmo no vermelho: mantém escarlate, não vermelho sangue
+    // (que é o mesmo matiz porém escuro)
+    const cores = hues.map((h, i) => hsl(
+      h,
+      R(0.82, 1.0),                          // saturação alta = mais vibrante
+      0.62 + 0.035 * i + R(-0.03, 0.03)
+    ));
+
+    // embaralha para a cor dominante mudar de abertura p/ abertura
+    for (let i = cores.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cores[i], cores[j]] = [cores[j], cores[i]];
+    }
+
+    gl.uniform1f(gl.getUniformLocation(prog, 'u_seed'), R(0, 40));
+    gl.uniform3f(gl.getUniformLocation(prog, 'u_shape'),
+      R(0.24, 0.34),   // até onde a faixa desce do topo (~30% da altura)
+      0,               // (não usado)
+      R(0, 6.28)       // fase inicial do transito horizontal (varia p/ abertura)
+    );
+    ['u_c1', 'u_c2', 'u_c3', 'u_c4'].forEach((nome, i) => {
+      gl.uniform3f(gl.getUniformLocation(prog, nome), ...cores[i]);
+    });
+
+    const uSpill = gl.getUniformLocation(prog, 'u_spill');
+
+    let escala = 1;
+    let vazamento = 0;   // px do canvas abaixo do rodapé do cover
+    const meas = document.createElement('canvas').getContext('2d');
+
+    function resize() {
+      // pixels de buffer por pixel de CSS. o campo é um borrão suave, então
+      // renderizar abaixo da tela é imperceptível — e o custo cai ao quadrado
+      escala = 0.6;
+      // o canvas é mais alto que o cover (o CSS cuida disso); lê dele mesmo
+      canvas.width  = Math.round(canvas.clientWidth  * escala);
+      canvas.height = Math.round(canvas.clientHeight * escala);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uRadius, 25 * escala);
+
+      vazamento = (canvas.clientHeight - cover.clientHeight) * escala;
+      gl.uniform1f(uSpill, vazamento);
+    }
+    // ResizeObserver e não só o resize da janela: quando a lista faz surgir
+    // a barra de rolagem, o cover estreita sem que a janela mude de tamanho
+    new ResizeObserver(resize).observe(cover);
+    resize();
+
+    // o canvas é fixo na viewport, então a caixa precisa ser recalculada
+    // quando o painel se move (scroll) ou cresce (resultados). NÃO a cada
+    // frame: getBoundingClientRect força reflow e derruba o FPS.
+    let dirty = true;
+    const marcar = () => { dirty = true; };
+    // o canvas está dentro do cover e rola junto com ele, então o scroll
+    // não altera a geometria relativa — só resize e digitação alteram
+    window.addEventListener('resize', marcar);
+    q.addEventListener('input', marcar);
+    q.addEventListener('keyup', marcar);
+    q.addEventListener('click', marcar);
+    new MutationObserver(marcar).observe(results, { childList: true });
+
+    // coordenadas relativas ao cover, com y contado de baixo p/ cima
+    function syncGeometry() {
+      const c = cover.getBoundingClientRect();
+      const i = q.getBoundingClientRect();
+      // a origem do gl_FragCoord é o rodapé do CANVAS, que fica `vazamento`
+      // abaixo do rodapé do cover — daí a soma
+      const yCentro = (c.bottom - i.bottom + i.height / 2) * escala + vazamento;
+
+      // input e lista formam um bloco só: o ímã cobre os dois
+      let base = i.bottom;
+      if (results.firstChild) base = results.getBoundingClientRect().bottom;
+      const alturaBloco = base - i.top;
+
+      gl.uniform4f(
+        uBox,
+        (i.left - c.left + i.width / 2) * escala,
+        (c.bottom - base + alturaBloco / 2) * escala + vazamento,
+        (i.width / 2) * escala,
+        (alturaBloco / 2) * escala
+      );
+
+      const cs = getComputedStyle(q);
+      meas.font = cs.fontSize + ' ' + cs.fontFamily;
+      const pad = parseFloat(cs.paddingLeft) || 0;
+
+      let upto = q.value.slice(0, q.selectionStart ?? q.value.length);
+      // o texto é desenhado em caixa alta, mas o value continua como digitado
+      if (cs.textTransform === 'uppercase') upto = upto.toUpperCase();
+      // measureText ignora letter-spacing do CSS — soma na mão
+      const ls = parseFloat(cs.letterSpacing) || 0;
+
+      const largura = meas.measureText(upto).width + ls * upto.length;
+      const x = Math.min(pad + largura, i.width - pad);
+      gl.uniform2f(uCaret, (i.left - c.left + x) * escala, yCentro);
+    }
+
+    let typing = 0;
+    let lastKey = -999;
+    let phase = 0;   // fase acumulada: a velocidade varia, então multiplicar
+                     // o tempo direto daria um salto a cada mudança
+
+    q.addEventListener('input', () => {
+      typing = Math.min(1, typing + 0.4);
+      lastKey = performance.now() / 1000;
+    });
+
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const INTERVALO = 1000 / 30;   // o campo dança devagar: 30fps é de sobra
+    let prev = performance.now();
+    let desde = INTERVALO;         // começa cheio p/ desenhar já no 1º frame
+
+    function frame(now) {
+      if (!still) requestAnimationFrame(frame);
+
+      const dtMs = now - prev;
+      prev = now;
+      const dt = Math.min(dtMs / 1000, 0.05);
+
+      // o Lenis recebe TODO frame: estrangular aqui deixaria o scroll serrilhado
+      lenis.raf(now);
+
+      // o tempo do campo também avança sempre, senão a dança engasgaria
+      typing = Math.max(0, typing - dt * 0.9);
+      // 0.19 = movimento de fundo do sunrise; 0.10 = o quanto a digitação
+      // acelera por cima disso (valor original, para não agitar demais)
+      phase += dt * (0.19 + 0.10 * typing);
+
+      // só o desenho é que anda a 30fps
+      desde += dtMs;
+      if (desde < INTERVALO) return;
+      desde = 0;
+
+      if (dirty) { syncGeometry(); dirty = false; }
+      gl.uniform1f(uPhase, phase);
+      gl.uniform1f(uType, typing);
+      gl.uniform1f(uPulse, now / 1000 - lastKey);
+
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+    requestAnimationFrame(frame);
+  })();
+  </script>
+</body>
+</html>

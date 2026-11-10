@@ -1,0 +1,241 @@
+.section {
+  padding: 5.4286rem 0 8rem;
+  color: #fff0e8;
+  background: #171717;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  min-height: 41.4286rem;
+  overflow: hidden;
+  border-block: 0.0714rem solid rgba(255, 255, 255, 0.12);
+  background: #201d1a;
+}
+
+.banner > img {
+  object-fit: cover;
+  object-position: center;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.banner:hover > img {
+  transform: scale(1.018);
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(13, 11, 10, 0.98) 0%,
+      rgba(13, 11, 10, 0.91) 31%,
+      rgba(13, 11, 10, 0.45) 58%,
+      rgba(13, 11, 10, 0.08) 82%
+    ),
+    linear-gradient(to top, rgba(12, 10, 9, 0.52), transparent 42%);
+  pointer-events: none;
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  width: 50%;
+  min-height: 41.4286rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 4.1429rem clamp(2.4286rem, 5vw, 5.4286rem);
+  padding-left: max(1.7143rem, calc((100vw - 102.8571rem) / 2));
+}
+
+.eyebrow {
+  margin-bottom: 1.4286rem;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+}
+
+.content h2 {
+  font-family: var(--font-titulo), var(--font);
+  font-size: clamp(2.8571rem, 4.2vw, 4.1429rem);
+  font-weight: 600;
+  line-height: 0.94;
+  letter-spacing: -0.052em;
+}
+
+.content h2 span {
+  display: block;
+}
+
+.copy {
+  max-width: 36.4286rem;
+  margin-top: 1.7857rem;
+  font-size: 1.0714rem;
+  line-height: 1.62;
+  color: rgba(247, 244, 239, 0.67);
+}
+
+.button {
+  width: min(100%, 22.1429rem);
+  min-height: 4rem;
+  margin-top: 2.4286rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4286rem;
+  padding: 0 1.5rem;
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-button);
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #171717;
+  background: var(--cor-destaque);
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background: #f7f4ef;
+}
+
+.button svg {
+  width: 1.3571rem;
+  height: 1.3571rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.signature {
+  position: absolute;
+  z-index: 2;
+  right: max(1.7143rem, calc((100vw - 102.8571rem) / 2));
+  bottom: 1.9286rem;
+  display: flex;
+  align-items: center;
+  gap: 0.7143rem;
+  font-size: var(--font-small);
+  font-weight: 550;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.57);
+}
+
+.signature i {
+  width: 2rem;
+  height: 0.0714rem;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.button:focus-visible {
+  outline: 0.1429rem solid #f7f4ef;
+  outline-offset: 0.2857rem;
+}
+
+@media (max-width: 58.5714rem) {
+  .banner,
+  .content {
+    min-height: 47.1429rem;
+  }
+
+  .banner > img {
+    object-position: 63% center;
+  }
+
+  .shade {
+    background:
+      linear-gradient(
+        to top,
+        rgba(12, 10, 9, 0.98) 0%,
+        rgba(12, 10, 9, 0.88) 43%,
+        rgba(12, 10, 9, 0.22) 75%
+      ),
+      linear-gradient(to right, rgba(12, 10, 9, 0.35), transparent);
+  }
+
+  .content {
+    width: 100%;
+    justify-content: flex-end;
+    padding: 3rem 1.7143rem 3.5714rem;
+  }
+}
+
+@media (max-width: 44.2857rem) {
+  .section {
+    padding: 3.8571rem 0 6rem;
+  }
+
+  .banner {
+    min-height: 44.2857rem;
+  }
+
+  .content {
+    min-height: 44.2857rem;
+    padding: 2.4286rem 1.2857rem 3.0714rem;
+  }
+
+  .content h2 {
+    font-size: 2.7143rem;
+  }
+
+  .copy {
+    font-size: 1rem;
+  }
+
+  .button {
+    width: 100%;
+  }
+
+  .signature {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner > img {
+    transition: none;
+  }
+
+  .banner:hover > img {
+    transform: none;
+  }
+}
+
+.banner {
+  background: #2c1819;
+}
+
+.eyebrow {
+  color: var(--cor-destaque);
+}
+
+.button {
+  color: #1b1315;
+  background: var(--cor-destaque);
+}
+
+.button:hover {
+  background: #fff0e8;
+}
+
+@media (max-width: 44.2857rem) {
+  .section {
+    padding: 3.4286rem 0 4.8571rem;
+  }
+
+  .banner,
+  .content {
+    min-height: 38.5714rem;
+  }
+
+  .content {
+    padding: 2.1429rem 1.1429rem 2.4286rem;
+  }
+}

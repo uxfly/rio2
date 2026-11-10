@@ -1,0 +1,175 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #171717;
+}
+
+.map {
+  position: absolute;
+  inset: 0;
+}
+
+.loading,
+.unavailable {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.62);
+  background:
+    radial-gradient(
+      circle at 70% 20%,
+      rgb(var(--map-accent-rgb, 216 97 50) / 0.16),
+      transparent 38%
+    ),
+    #1c1c1c;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
+}
+
+.loading > span {
+  width: 2rem;
+  height: 2rem;
+  border: 0.14rem solid rgba(255, 255, 255, 0.12);
+  border-top-color: var(--cor-destaque);
+  border-radius: 50%;
+  animation: map-loading 0.8s linear infinite;
+}
+
+.loadingHidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.unavailable {
+  position: relative;
+}
+
+.unavailable span {
+  color: var(--cor-destaque);
+}
+
+.unavailable p {
+  max-width: 25rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.popup :global(.maplibregl-popup-content) {
+  overflow: hidden;
+  padding: 0;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.13);
+  border-radius: var(--radius-padrao);
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.48);
+  color: #f7f4ef;
+  background: #202020;
+}
+
+.popup :global(.maplibregl-popup-tip) {
+  border-top-color: #202020;
+  border-bottom-color: #202020;
+}
+
+.popupCard img {
+  width: 100%;
+  height: 8.5rem;
+  display: block;
+  object-fit: cover;
+}
+
+.popupCopy {
+  display: grid;
+  gap: 0.52rem;
+  padding: 1rem;
+}
+
+.popupCopy > span {
+  font-size: var(--font-small);
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cor-destaque);
+}
+
+.popupCopy strong {
+  font-family: var(--font-titulo), var(--font);
+  font-size: 1.3rem;
+  line-height: 1.05;
+}
+
+.popupCopy small {
+  line-height: 1.4;
+  color: rgba(247, 244, 239, 0.52);
+}
+
+.popupCopy a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.35rem;
+  padding-top: 0.8rem;
+  border-top: 0.0714rem solid rgba(255, 255, 255, 0.1);
+  font-size: var(--font-small);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #f7f4ef;
+}
+
+.popupCopy a span:last-child {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.root :global(.maplibregl-ctrl-group) {
+  overflow: hidden;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-padrao);
+  box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.3);
+  background: rgba(28, 28, 28, 0.92);
+}
+
+.root :global(.maplibregl-ctrl-group button) {
+  filter: invert(1);
+}
+
+.root :global(.maplibregl-ctrl-attrib) {
+  color: rgba(247, 244, 239, 0.5);
+  background: rgba(23, 23, 23, 0.78);
+}
+
+.root :global(.maplibregl-ctrl-attrib a) {
+  color: inherit;
+}
+
+@keyframes map-loading {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading > span {
+    animation: none;
+  }
+
+  .loading {
+    transition: none;
+  }
+}

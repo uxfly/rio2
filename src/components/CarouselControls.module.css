@@ -1,0 +1,149 @@
+.root {
+  min-height: 4rem;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 2.2857rem;
+}
+
+.progress {
+  display: flex;
+  gap: 0.4286rem;
+}
+
+.progress button {
+  width: 3rem;
+  height: 0.1429rem;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.15);
+  transition:
+    width 0.4s ease,
+    background-color 0.4s ease;
+}
+
+.progress button.active {
+  width: 5.1429rem;
+  background: var(--cor-destaque);
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0.7143rem;
+  padding: 0;
+  border: 0;
+  font-size: var(--font-small);
+  font-family: inherit;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.35);
+  background: transparent;
+}
+
+.counter span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.counter i {
+  position: relative;
+  width: 2.2857rem;
+  height: 0.0714rem;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.counter i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--cor-destaque);
+  transform: scaleX(var(--carousel-progress));
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.counter:hover span {
+  color: var(--cor-destaque);
+}
+
+.counter:focus-visible {
+  outline: 0.1429rem solid #f7f4ef;
+  outline-offset: 0.4286rem;
+}
+
+.arrows {
+  display: flex;
+  justify-self: end;
+  gap: 0.5714rem;
+}
+
+.arrows button {
+  width: 3.7143rem;
+  height: 3.7143rem;
+  display: grid;
+  place-items: center;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.16);
+  border-radius: 50%;
+  color: #f7f4ef;
+  background: transparent;
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.arrows button:hover {
+  color: #171717;
+  border-color: var(--cor-destaque);
+  background: var(--cor-destaque);
+}
+
+.arrows svg {
+  width: 1.4286rem;
+  height: 1.4286rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.progress button:focus-visible,
+.arrows button:focus-visible {
+  outline: 0.1429rem solid #f7f4ef;
+  outline-offset: 0.2857rem;
+}
+
+@media (max-width: 44.2857rem) {
+  .root {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.8571rem;
+  }
+
+  .progress {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .progress button {
+    width: 1rem;
+    flex: 0 0 auto;
+  }
+
+  .progress button.active {
+    width: 2.4286rem;
+  }
+
+  .counter {
+    display: none;
+  }
+
+  .arrows button {
+    width: 3.1429rem;
+    height: 3.1429rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .progress button {
+    transition: none;
+  }
+}

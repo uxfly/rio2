@@ -1,0 +1,112 @@
+.bar {
+  position: relative;
+  z-index: 3;
+  padding: 1.2857rem 0 clamp(1.4286rem, 2vw, 2.1429rem);
+  color: #f7f4ef;
+  background: #171717;
+}
+
+/* Nas rotas com cover, a transição invade discretamente a base da imagem.
+   O espaço total não cresce: a margem negativa sobe a camada e o padding
+   preserva a posição útil do breadcrumb. */
+:global(body:has(.cover)) .bar {
+  margin-top: -4.2857rem;
+  padding-top: 4.8571rem;
+  background: linear-gradient(
+    to bottom,
+    transparent 0,
+    rgba(23, 23, 23, 0.82) 42%,
+    #171717 76%
+  );
+}
+
+/* Alguns catálogos nasceram com margem negativa para se aproximar diretamente
+   do cover. Quando o breadcrumb existe, ele passa a controlar essa transição. */
+.bar + main {
+  margin-top: 0;
+}
+
+.inner {
+  width: min(102.8571rem, calc(100% - 3.4286rem));
+  margin: 0 auto;
+  padding-bottom: 1.2857rem;
+  border-bottom: 0.0714rem solid rgba(255, 255, 255, 0.1);
+}
+
+.productInner {
+  width: auto;
+  margin-inline: max(1.7143rem, 4vw);
+}
+
+.inner ol {
+  display: flex;
+  align-items: center;
+  gap: 0.7143rem;
+  overflow: hidden;
+  list-style: none;
+}
+
+.inner li {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.7143rem;
+  flex: 0 0 auto;
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.34);
+  white-space: nowrap;
+}
+
+.inner li:last-child {
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.inner a,
+.inner span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.inner a {
+  color: rgba(247, 244, 239, 0.42);
+  transition: color 0.25s ease;
+}
+
+.inner a:hover {
+  color: var(--cor-destaque);
+}
+
+.inner span[aria-current="page"] {
+  color: rgba(247, 244, 239, 0.72);
+}
+
+.inner i {
+  font-style: normal;
+  color: rgba(194, 135, 90, 0.48);
+}
+
+@media (max-width: 52rem) {
+  .inner ol {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .inner ol::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 44.2857rem) {
+  .inner {
+    width: calc(100% - 2.2857rem);
+  }
+
+  .inner ol {
+    gap: 0.7143rem;
+    padding-block: 0.8571rem;
+  }
+}

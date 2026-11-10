@@ -1,0 +1,274 @@
+.gallery {
+  margin-top: 2.5rem;
+}
+
+.controls {
+  min-height: 3.2857rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.controls p {
+  display: flex;
+  align-items: center;
+  gap: 0.8571rem;
+}
+
+.controls p {
+  font-size: var(--font-small);
+  letter-spacing: 0.1em;
+  color: rgba(247, 244, 239, 0.34);
+}
+
+.controls p span:first-child {
+  color: var(--cor-destaque);
+}
+
+.controls p i {
+  width: 3.4286rem;
+  height: 0.0714rem;
+  background: rgba(247, 244, 239, 0.18);
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  min-height: 38rem;
+  overflow: hidden;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-padrao);
+  background: #f2eee6;
+}
+
+.stageOpen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+}
+
+.stageOpen img {
+  object-fit: contain;
+  padding: clamp(1rem, 3vw, 3.5714rem);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stageOpen:hover img,
+.stageOpen:focus-visible img {
+  transform: scale(1.018);
+}
+
+.stageArrow {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  width: 4.2857rem;
+  height: 4.2857rem;
+  border: 0.0714rem solid rgba(23, 23, 23, 0.18);
+  border-radius: var(--radius-padrao);
+  font-size: 1.1429rem;
+  color: #171717;
+  background: rgba(247, 244, 239, 0.84);
+  backdrop-filter: blur(0.7143rem);
+  transform: translateY(-50%);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.stageArrow:hover {
+  border-color: var(--cor-destaque);
+  background: var(--cor-destaque);
+}
+
+.stagePrevious {
+  left: 1.1429rem;
+}
+
+.stageNext {
+  right: 1.1429rem;
+}
+
+.stageMeta {
+  position: absolute;
+  right: 1.1429rem;
+  bottom: 1.1429rem;
+  left: 1.1429rem;
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1.4286rem;
+  padding: 1rem 1.1429rem;
+  border-radius: var(--radius-padrao);
+  color: #f7f4ef;
+  text-align: left;
+  background: rgba(23, 23, 23, 0.84);
+  backdrop-filter: blur(1rem);
+}
+
+.stageMeta strong {
+  display: block;
+}
+
+.stageMeta strong {
+  font-size: 1rem;
+  font-weight: 550;
+}
+
+.stageMeta > span:last-child {
+  font-size: var(--font-button);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lightbox {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2.1429rem;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(1.4286rem);
+  animation: enter 0.35s ease both;
+}
+
+.lightboxStage {
+  position: relative;
+  width: min(92vw, 110rem);
+  height: min(86vh, 68rem);
+  overflow: hidden;
+  border-radius: var(--radius-padrao);
+  background: #f2eee6;
+}
+
+.lightboxStage img {
+  object-fit: contain;
+}
+
+.close,
+.arrow {
+  position: absolute;
+  z-index: 1;
+  width: 4.2857rem;
+  height: 4.2857rem;
+  display: grid;
+  place-items: center;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.24);
+  border-radius: var(--radius-padrao);
+  color: #fff;
+  background: rgba(23, 23, 23, 0.62);
+  backdrop-filter: blur(0.7143rem);
+}
+
+.close {
+  top: 2.1429rem;
+  right: 2.1429rem;
+  font-size: 1.7143rem;
+}
+
+.arrow {
+  top: 50%;
+  font-size: 1.2857rem;
+  transform: translateY(-50%);
+}
+
+.previous {
+  left: 2.1429rem;
+}
+
+.next {
+  right: 2.1429rem;
+}
+
+.lightboxMeta {
+  position: absolute;
+  z-index: 1;
+  bottom: 2.8571rem;
+  left: 50%;
+  display: flex;
+  gap: 2.1429rem;
+  padding: 0.8571rem 1.1429rem;
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(23, 23, 23, 0.75);
+  transform: translateX(-50%);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 52rem) {
+  .stage {
+    min-height: 27rem;
+  }
+
+  .stageOpen img {
+    padding: 1rem;
+  }
+
+  .stageArrow {
+    width: 3.7143rem;
+    height: 3.7143rem;
+  }
+
+  .stageMeta > span:last-child {
+    font-size: 0;
+  }
+
+  .stageMeta > span:last-child::after {
+    content: "↗";
+    font-size: 1rem;
+  }
+
+  .lightbox {
+    padding: 1rem;
+  }
+
+  .lightboxStage {
+    width: 100%;
+    height: 78vh;
+  }
+
+  .close,
+  .arrow {
+    width: 3.7143rem;
+    height: 3.7143rem;
+  }
+
+  .previous {
+    left: 1rem;
+  }
+
+  .next {
+    right: 1rem;
+  }
+}
+
+@media (max-width: 44.2857rem) {
+  .stage {
+    min-height: 22.8571rem;
+  }
+
+  .stageMeta {
+    gap: 1rem;
+    padding: 0.8571rem 1rem;
+  }
+
+  .lightbox {
+    padding: 0.7143rem;
+  }
+
+  .lightboxStage {
+    height: 72svh;
+  }
+}

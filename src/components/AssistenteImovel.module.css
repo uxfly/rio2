@@ -1,0 +1,204 @@
+.panel {
+  position: sticky;
+  top: 1.4286rem;
+  overflow: hidden;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-padrao);
+  color: #f7f4ef;
+  background: rgba(28, 27, 26, 0.96);
+  box-shadow: 0 2.1429rem 6.4286rem rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(1.4286rem) saturate(130%);
+}
+
+.heading {
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.4286rem;
+  padding: 0 1.4286rem;
+  border-bottom: 0.0714rem solid rgba(255, 255, 255, 0.1);
+}
+
+.heading > div {
+  display: flex;
+  align-items: center;
+  gap: 0.7143rem;
+  font-size: var(--font-button);
+  font-weight: 650;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heading > span {
+  font-size: var(--font-small);
+  color: rgba(247, 244, 239, 0.38);
+}
+
+.status {
+  width: 0.5714rem;
+  height: 0.5714rem;
+  border-radius: 50%;
+  background: var(--cor-destaque);
+  box-shadow: 0 0 1rem rgba(194, 135, 90, 0.7);
+}
+
+.price {
+  padding: 1.7143rem 1.4286rem;
+  border-bottom: 0.0714rem solid rgba(255, 255, 255, 0.1);
+  background: rgba(194, 135, 90, 0.045);
+}
+
+.price > span {
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.38);
+}
+
+.price strong {
+  display: block;
+  margin-top: 0.7143rem;
+  font-family: var(--font-titulo), var(--font);
+  font-size: 2.2857rem;
+  font-weight: 580;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.price p {
+  margin-top: 0.7143rem;
+  font-size: var(--font-small);
+  color: rgba(247, 244, 239, 0.32);
+}
+
+.messages {
+  max-height: 20rem;
+  overflow-y: auto;
+  display: grid;
+  gap: 0.7143rem;
+  padding: 1.4286rem;
+  scrollbar-width: thin;
+}
+
+.messages p {
+  width: fit-content;
+  max-width: 88%;
+  padding: 0.8571rem 1rem;
+  border-radius: var(--radius-padrao);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.assistantMessage {
+  color: rgba(247, 244, 239, 0.72);
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.userMessage {
+  justify-self: end;
+  color: #171717;
+  background: var(--cor-destaque);
+}
+
+.suggestions {
+  display: flex;
+  gap: 0.5714rem;
+  padding: 0 1.4286rem 1.2857rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.suggestions::-webkit-scrollbar {
+  display: none;
+}
+
+.suggestions button {
+  min-height: 2.7143rem;
+  flex: 0 0 auto;
+  padding: 0 0.8571rem;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-padrao);
+  font-size: var(--font-button);
+  color: rgba(247, 244, 239, 0.58);
+  background: transparent;
+}
+
+.panel form {
+  padding: 1.2857rem 1.4286rem 1.4286rem;
+  border-top: 0.0714rem solid rgba(255, 255, 255, 0.1);
+}
+
+.panel form label {
+  display: block;
+  margin-bottom: 0.7143rem;
+  font-size: var(--font-small);
+  font-weight: 600;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(247, 244, 239, 0.36);
+}
+
+.panel form > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3.7143rem;
+  border: 0.0714rem solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-padrao);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.panel input {
+  min-width: 0;
+  height: 3.7143rem;
+  padding: 0 1rem;
+  border: 0;
+  outline: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  color: #f7f4ef;
+  background: transparent;
+}
+
+.panel form button {
+  border: 0;
+  border-radius: var(--radius-padrao);
+  font-size: 1.2857rem;
+  color: #171717;
+  background: var(--cor-destaque);
+}
+
+.suggestions button:focus-visible,
+.panel form button:focus-visible {
+  outline: 0.1429rem solid var(--cor-destaque);
+  outline-offset: 0.2857rem;
+}
+
+@media (max-width: 70rem) {
+  .panel {
+    position: relative;
+    top: auto;
+  }
+}
+
+@media (max-width: 44.2857rem) {
+  .header {
+    gap: 1rem;
+    padding: 0 1.1429rem;
+  }
+
+  .intro,
+  .messages,
+  .suggestions {
+    padding-inline: 1.1429rem;
+  }
+
+  .intro,
+  .messages {
+    padding-block: 1.1429rem;
+  }
+
+  .composer {
+    padding: 1rem 1.1429rem 1.1429rem;
+  }
+}
